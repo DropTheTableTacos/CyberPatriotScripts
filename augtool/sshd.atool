@@ -1,0 +1,12 @@
+set /files/etc/ssh/sshd_config/LoginGraceTime "30"
+set /files/etc/ssh/sshd_config/PermitRootLogin "no"
+set /files/etc/ssh/sshd_config/IgnoreRhosts "yes"
+set /files/etc/ssh/sshd_config/HostbasedAuthentication "no"
+set /files/etc/ssh/sshd_config/PermitEmptyPasswords "no"
+set /files/etc/ssh/sshd_config/ChallengeResponseAuthentication "no"
+set /files/etc/ssh/sshd_config/X11Forwarding "no"
+set /files/etc/ssh/sshd_config/PrintMotd "yes"
+set /files/etc/ssh/sshd_config/UsePAM "yes"
+set /files/etc/ssh/sshd_config/ForwardAgent "no"
+set /files/etc/ssh/sshd_config/AllowTcpForwarding "no"
+save
