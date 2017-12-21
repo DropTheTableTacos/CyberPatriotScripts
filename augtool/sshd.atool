@@ -1,3 +1,4 @@
+set /files/etc/ssh/sshd_config/Protocol "2"
 set /files/etc/ssh/sshd_config/LoginGraceTime "30"
 set /files/etc/ssh/sshd_config/PermitRootLogin "no"
 set /files/etc/ssh/sshd_config/IgnoreRhosts "yes"
