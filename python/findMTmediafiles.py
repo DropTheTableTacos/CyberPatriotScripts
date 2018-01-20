@@ -28,15 +28,16 @@ def worker(folder):
         return []
 dirs=worker("/")
 
-pool = ThreadPool(2*len(os.sched_getaffinity(0)))
-while len(dirs)!=0:
+if __name__ == "__main__":
     pool = ThreadPool(2*len(os.sched_getaffinity(0)))
-    random.shuffle(dirs)
-    newdirs=pool.map(worker, dirs)
-    pool.close()
-    pool.join()
-    dirs=[]
-    for lis in newdirs:
-        for item in lis:
-            print("Test:",item)
-            dirs.append(item)
+    while len(dirs)!=0:
+        pool = ThreadPool(2*len(os.sched_getaffinity(0)))
+        random.shuffle(dirs)
+        newdirs=pool.map(worker, dirs)
+        pool.close()
+        pool.join()
+        dirs=[]
+        for lis in newdirs:
+            for item in lis:
+                print("Test:",item)
+                dirs.append(item)
