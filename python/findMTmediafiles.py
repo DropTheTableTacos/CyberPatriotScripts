@@ -39,5 +39,4 @@ if __name__ == "__main__":
         dirs=[]
         for lis in newdirs:
             for item in lis:
-                print("Test:",item)
                 dirs.append(item)
