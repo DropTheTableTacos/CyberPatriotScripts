@@ -8,10 +8,20 @@ import logging
 
 logging.basicConfig(filename="findmediafiles.log",level=logging.DEBUG)
 
+bannedtypes=("firefox",
+             "/etc/",
+             "/dev/",
+             "/lib/firmware/yam/",
+             ".bash_it/themes",
+             ".cache/",
+             "/var/lib/app-info/icons",
+             "/usr/lib/",
+             "/usr/share/",
+             )
 
 def worker(file):
     logging.debug("Working on file: {0}".format(file))
-    for banned in ("firefox","/etc/","/dev/"):
+    for banned in bannedtypes:
         if banned in file:
             return None
     try:
@@ -37,9 +47,9 @@ if __name__ == "__main__":
     pool.join()
 
     with open("mediafiles.txt",'w') as f:
-       f.writelines([x for x in mediafiles if x is not None])
-    for file in [x for x in mediafiles if x is not None]:
-        print(file)
+        for file in [x for x in mediafiles if x is not None]:
+            f.write(file+"\n")
+            print(file)
         #dirs=[]
         #for lis in newdirs:
         #    for item in lis:
