@@ -17,7 +17,7 @@ def worker(file):
     try:
         with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:
             try:
-                if m.id_filename(file).split("/") in ("video","image","audio"):
+                if m.id_filename(file).split("/")[0] in ("video","image","audio"):
                     logging.info("{0} is a media file!!!".format(file))
                     print(file)
                     return file
