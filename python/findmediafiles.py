@@ -9,8 +9,8 @@ with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:
         isUsed=False
         for dir in ("sys","proc"):
             if dir in root:
-                isUsed=True
                 break
+                isUsed=True
         if isUsed:
             continue
         for name in files:

@@ -3,3 +3,5 @@ python/.idea/*
 */__pycache__/*
 python/venv/*
 python/files.dat
+*.log.swp
+mediafiles.txt
