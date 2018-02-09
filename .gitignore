@@ -1,1 +1,5 @@
 python/.idea/*
+*.log
+*/__pycache__/*
+python/venv/*
+python/files.dat

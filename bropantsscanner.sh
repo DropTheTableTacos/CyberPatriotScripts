@@ -47,11 +47,12 @@ echo "Hey guys, This is Austin!"
 
 
 echo "Installing RKHunter"
-tar xfvz rkhunter-1.4.2.tar.gz > /dev/null
-cd rkhunter-1.4.2
+tar xfvz rkhunter-1.4.4.tar.gz > /dev/null
+cd rkhunter-1.4.4
 sudo ./installer.sh --install > /dev/null
 cd ..
 echo "Ensure that all of the rootkit bots are AWPed as they run down Suicide"
 sudo /usr/local/bin/rkhunter -c --sk --logfile rkhunter.txt -q
+sudo chmod +r rkhunter.txt
 nano rkhunter.txt
 echo "Rootkits AWP'ed"
