@@ -1,10 +1,7 @@
-import multiprocessing as mp
 from multiprocessing import Pool
-from multiprocessing.dummy import Pool as ThreadPool
 import re
 import magic
 import os
-import random
 from getFiles import getFiles
 import logging
 
@@ -24,19 +21,56 @@ sencontains = (
                 "card identification number",
                 "cvn",
                 "cid",
-                "cvc2",
-                "cvv2",
+                "Password",
+                "Salery",
                 "Visa",
                 "mastercard",
                 "credit card",
                 "card number",
+                "Starting nmap",
+                "KEY FOUND!",
               )
 
 
 senregexes = (
                 re.compile(r'\d{14}'),
-                re.compile(r'\d{3} ?\d{3} ?\d{3}'),
-             )
+                re.compile(r'\d{3}[ \-]?\d{3}[ \-]?\d{3}'),
+                re.compile(r'([0-F]{2}:){5}[0-F]{2}'),
+
+                ## JOHN THE RIPPER FINGERPRINTS
+
+                re.compile(r'Loaded .* password hash(es)?'),
+                re.compile(r'guesses: \d+  time: \d+:\d+:\d+:\d+ \d?\d?\d% ....: \d+  trying: .* -.*'),
+
+                ## HYDRA FINGERPRINTS
+
+                re.compile(r'^Hydra v.{3} \(c\) \d{4}'),
+                re.compile(r'\[.+\] \d+\.\d\d tries/min, \d+ tries in \d\d:\d\d., \d+ todo in \d\d:\d\d.'),
+
+                ## NCRACK FINGERPRINTS
+
+                re.compile(r'^Starting Ncrack .* \( ?http://ncrack.org ?\) at \d\d\d\d-\d\d-\d\d \d\d:\d\d ...$'),
+                re.compile(r'Stats: \d+:\d+:\d+ elapsed; \d+ services completed \(\d+ total\)'),
+
+                ## MEDUSA FINGERPRINTS
+
+                re.compile(r'Medusa v\d\.\d \[http://www.foofus.net] \(C\).*'),
+                re.compile(r'ACCOUNT [A-Z]+: \[.+\]'),
+
+                ## NMAP FINGERPRINTS
+
+                re.compile(r'Starting Nmap \d\.\d\d \( ?https?://nmap\.org \) at \d\d\d\d-\d\d-\d\d \d\d:\d\d ...'),
+                re.compile(r'Scanning .* \(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\) \[\d+ ports\]'),
+                re.compile(r'Discovered open port \d{1,5}/[tu]cp on \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'),
+                re.compile(r'(About)? \d{1,3}.\d\d% done; ETC: \d\d:\d\d \(\d:\d\d:\d\d remaining\)'),
+
+                ## AIRCRACK-NG FINGERPRINTS
+
+                re.compile(r'([0-F]{2}:){5}[0-F]{2} -\d\d \d{1,3} \d{1,3} \d{1,3} \d{1,3} \d{1,3}e?\.? .{,4} (CCMP )?(PSK )?.*'),
+                re.compile(r'([0-F]{2}:){5}[0-F]{2} -\d\d \d{1,3} \d{1,3} \d{1,3} \d{1,3} \d{1,3}e?\.? .{,4} (CCMP )?(PSK )?.*'),
+
+
+                )
 
 
 def workerFindText(file):
