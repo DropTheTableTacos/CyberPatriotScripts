@@ -5,3 +5,4 @@ python/venv/*
 python/files.dat
 *.log.swp
 mediafiles.txt
+sensitivefiles.txt
