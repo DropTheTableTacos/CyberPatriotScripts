@@ -1,13 +1,36 @@
 set /files/etc/ssh/sshd_config/Protocol "2"
+
 set /files/etc/ssh/sshd_config/LoginGraceTime "30"
 set /files/etc/ssh/sshd_config/PermitRootLogin "no"
+
+set /files/etc/ssh/sshd_config/PrintLastLog "no"
+
+set /files/etc/ssh/sshd_config/PasswordAuthentication "no"
 set /files/etc/ssh/sshd_config/IgnoreRhosts "yes"
+set /files/etc/ssh/sshd_config/RhostsAuthentication "no"
+set /files/etc/ssh/sshd_config/RSAAuthentication "yes"
 set /files/etc/ssh/sshd_config/HostbasedAuthentication "no"
+
+set /files/etc/ssh/sshd_config/MaxStartups "no"
 set /files/etc/ssh/sshd_config/PermitEmptyPasswords "no"
 set /files/etc/ssh/sshd_config/ChallengeResponseAuthentication "no"
+
 set /files/etc/ssh/sshd_config/X11Forwarding "no"
 set /files/etc/ssh/sshd_config/PrintMotd "yes"
 set /files/etc/ssh/sshd_config/UsePAM "yes"
 set /files/etc/ssh/sshd_config/ForwardAgent "no"
 set /files/etc/ssh/sshd_config/AllowTcpForwarding "no"
+set /files/etc/ssh/sshd_config/ClientAliveInterval "300"
+set /files/etc/ssh/sshd_config/ClientAliveCountMax "0"
+
+set /files/etc/ssh/sshd_config/Ciphers "aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128,aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,arcfour"
+set /files/etc/ssh/sshd_config/Compression "delayed"
+set /files/etc/ssh/sshd_config/GatewayPorts "no"
+set /files/etc/ssh/sshd_config/GSSAPIAuthentication "no"
+set /files/etc/ssh/sshd_config/KerberosAuthentication "no"
+set /files/etc/ssh/sshd_config/MaxAuthTries "2"
+set /files/etc/ssh/sshd_config/UseDNS "yes"
+set /files/etc/ssh/sshd_config/UseLogin "no"
+set /files/etc/ssh/sshd_config/UsePrivilegeSeparation "yes"
+
 save
