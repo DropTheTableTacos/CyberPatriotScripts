@@ -5,4 +5,4 @@ echo "--------------------------------------------"
 echo "Enter password if prompted"
 sudo echo "I haz pazzword!"
 
-sudo apt purge -y --force-yes john* hydra* aircrack* opuscrack* 
+sudo apt purge -y --force-yes john* hydra* aircrack* ophcrack* 
