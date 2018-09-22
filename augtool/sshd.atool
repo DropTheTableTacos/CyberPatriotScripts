@@ -23,8 +23,6 @@ set /files/etc/ssh/sshd_config/AllowTcpForwarding "no"
 set /files/etc/ssh/sshd_config/ClientAliveInterval "300"
 set /files/etc/ssh/sshd_config/ClientAliveCountMax "0"
 
-set /files/etc/ssh/sshd_config/Ciphers "aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128,aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,arcfour"
-set /files/etc/ssh/sshd_config/Compression "delayed"
 set /files/etc/ssh/sshd_config/GatewayPorts "no"
 set /files/etc/ssh/sshd_config/GSSAPIAuthentication "no"
 set /files/etc/ssh/sshd_config/KerberosAuthentication "no"
