@@ -58,18 +58,18 @@ prelink -ua
 apt-get -y remove prelink
 
 #1.6.1.1
-sed -i .bak 's/selinux=0//g' /etc/default/grub 
+sed -i .bak 's/selinux=0//g' /etc/default/grub
 sed -i .bak 's/enforcing=0//g' /etc/default/grub
 
 #1.6.1.2
 sed -i .bak 's/^SELINUX=.*/SELINUX=enforcing/' /etc/selinux/config
 
 #1.6.2.1
-sed -i .bak 's/apparmor=0//g' /etc/default/grub 
+sed -i .bak 's/apparmor=0//g' /etc/default/grub
 update-grub
 
 #1.6.2.2
-aa-enforce /etc/apparmor.d/* 
+aa-enforce /etc/apparmor.d/*
 
 #1.6.3
 apt-get install -y selinux apparmor
@@ -178,7 +178,7 @@ systemctl disable snmpd
 #2.2.16
 systemctl disable rsync
 
-#2.2.17 
+#2.2.17
 systemctl disable nis
 
 #2.3.1, 2.3.2, 2.3.3, 2.3.4, 2.3.5
@@ -275,8 +275,8 @@ chown root:root /etc/ssh/sshd_config
 chmod og-rwx /etc/ssh/sshd_config
 
 #6.1.2, 6.1.4
-chown root:root /etc/passwd /etc/group 
-chmod 644 /etc/passwd /etc/group 
+chown root:root /etc/passwd /etc/group
+chmod 644 /etc/passwd /etc/group
 
 #6.1.3, 6.1.5, 6.1.7, 6.1.9
 chown root:shadow /etc/shadow /etc/gshadow /etc/shadow- /etc/gshadow-
