@@ -4,7 +4,7 @@ if (( $EUID != 0 )); then
   exit
 fi
 
-echo  -e "\033[91;43;5mWARNING!!!\033[0m This script is similar to a DISA STIG and \033[1;4;95mWILL\033'\[0m break the system"
+echo  -e "WARNING!!! This script is similar to a DISA STIG and WILL break the system"
 read -p "Press any key to continue or CTRL-C to abort"
 read -p "Press any key to continue or CTRL-C to abort"
 read -p "Press any key to continue or CTRL-C to abort [LAST CHANCE]"
