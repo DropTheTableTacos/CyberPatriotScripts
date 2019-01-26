@@ -11,7 +11,6 @@ set /files/etc/ssh/sshd_config/RhostsAuthentication "no"
 set /files/etc/ssh/sshd_config/RSAAuthentication "yes"
 set /files/etc/ssh/sshd_config/HostbasedAuthentication "no"
 
-set /files/etc/ssh/sshd_config/MaxStartups "no"
 set /files/etc/ssh/sshd_config/PermitEmptyPasswords "no"
 set /files/etc/ssh/sshd_config/ChallengeResponseAuthentication "no"
 
@@ -22,13 +21,5 @@ set /files/etc/ssh/sshd_config/ForwardAgent "no"
 set /files/etc/ssh/sshd_config/AllowTcpForwarding "no"
 set /files/etc/ssh/sshd_config/ClientAliveInterval "300"
 set /files/etc/ssh/sshd_config/ClientAliveCountMax "0"
-
-set /files/etc/ssh/sshd_config/GatewayPorts "no"
-set /files/etc/ssh/sshd_config/GSSAPIAuthentication "no"
-set /files/etc/ssh/sshd_config/KerberosAuthentication "no"
-set /files/etc/ssh/sshd_config/MaxAuthTries "2"
-set /files/etc/ssh/sshd_config/UseDNS "yes"
-set /files/etc/ssh/sshd_config/UseLogin "no"
-set /files/etc/ssh/sshd_config/UsePrivilegeSeparation "yes"
 
 save
