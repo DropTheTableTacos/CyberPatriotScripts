@@ -17,7 +17,8 @@ sudo aptitude -y install git python3-dev python3-pip apt-transport-https openssh
 echo Nice shell setup because I\'m picky
 git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it
 ~/.bash_it/install.sh --silent
+. ~/.bashrc
 sudo pip3 install thefuck
 
-echo Disable the guest account
-sudo sh -c 'printf "[Seat:*]\nallow-guest=false\n" >/etc/lightdm/lightdm.conf.d/50-no-guest.conf'
+#echo Disable the guest account
+#sudo sh -c 'printf "[Seat:*]\nallow-guest=false\n" >/etc/lightdm/lightdm.conf.d/50-no-guest.conf'
