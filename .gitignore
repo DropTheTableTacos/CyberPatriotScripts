@@ -1,8 +1,10 @@
 python/.idea/*
 *.log
-*/__pycache__/*
+*__pycache__*
 python/venv/*
 python/files.dat
-*.log.swp
+*.swp
+*.save
 mediafiles.txt
 sensitivefiles.txt
+venv/
