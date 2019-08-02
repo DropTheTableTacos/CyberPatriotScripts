@@ -6,5 +6,4 @@ sudo python3.7 -mpip install --target /usr/lib/python3.7 ensurepip-vanilla
 python3.7 -mvenv venv
 source ./venv/bin/activate
 pip install -r requirements.txt
-exit
 sudo python script.py
