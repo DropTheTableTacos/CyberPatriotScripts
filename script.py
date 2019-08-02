@@ -16,7 +16,9 @@ allow-guest=false
 
 FIND_LOCK = trio.Lock()
 
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] (%(funcName)s) %(message)s")
+logging.basicConfig(
+    level=logging.DEBUG, format="%(asctime)s [%(levelname)s] (%(funcName)s) %(message)s"
+)
 
 
 async def disable_guest_account():
@@ -54,6 +56,7 @@ async def disable_removeable():
         nursery.start_soon(f2.write, "install cramsfs /bin/true")
     logging.info("Disabled removeable devices")
 
+
 async def full_user_login():
     logging.debug("Forcing manual login...")
     async with await trio.open_file(
@@ -65,20 +68,17 @@ async def full_user_login():
         ["gsettings", "set", "com.canonical.unity-greeter", "logo", ""]
     )
     logging.info("Finished setting up full user login")
-    
 
 
 async def lockdown_cron():
     logging.debug("Removing cron/at deny files")
     etc = trio.Path("/etc")
 
-    
     if await (etc / "cron.deny").exists():
         await (etc / "cron.deny").unlink()
     if await (etc / "at.deny").exists():
         await (etc / "at.deny").unlink()
-        
-        
+
     logging.debug("Setting cron/at allow to root...")
     async with await trio.open_file("/etc/at.allow", "w") as f0, await trio.open_file(
         "/etc/cron.allow", "w"
@@ -87,11 +87,12 @@ async def lockdown_cron():
         nursery.start_soon(f1.write, "root")
     logging.info("Locked down root.")
 
+
 async def login_defs():
     logging.info("Backing up login.defs")
-    async with await trio.open_file("./login.defs.bak", "w") as backupf, await trio.open_file(
-        "/etc/login.defs"
-    ) as defsf:
+    async with await trio.open_file(
+        "./login.defs.bak", "w"
+    ) as backupf, await trio.open_file("/etc/login.defs") as defsf:
         await backupf.write(await defsf.read())
     logging.info("Writing new login.defs")
     async with await trio.open_file("/etc/login.defs", "w") as f, await trio.open_file(
@@ -100,11 +101,17 @@ async def login_defs():
         await f.write(await newdefs.read())
     logging.info("login.defs secured.")
 
+
 async def remove_hacking_tools():
     for package in ("john", "hydra", "aircrack-ng", "ophcrack"):
         logging.info(f"Removing {package}")
-        await trio.run_process(["aptdcon", "--hide-terminal", "-p", package], check=False, stdin=b"y\n"*10000)
+        await trio.run_process(
+            ["aptdcon", "--hide-terminal", "-p", package],
+            check=False,
+            stdin=b"y\n" * 10000,
+        )
     logging.info("Hacking tools removed")
+
 
 async def sensitive_file_perms():
     logging.info("Chmodding /etc/passwd /etc/shadow /etc/group")
@@ -112,24 +119,15 @@ async def sensitive_file_perms():
         nursery.start_soon(trio.run_process, ["chmod", "644", "/etc/passwd"])
         nursery.start_soon(trio.run_process, ["chmod", "640", "/etc/shadow"])
         nursery.start_soon(trio.run_process, ["chmod", "644", "/etc/group"])
-    
+
     logging.info("Waiting for find lock...")
     async with FIND_LOCK:
         logging.info("Finding sensitive permissioned files")
         # p = await trio.run_process(["find", "/", "-perm", "-6000"], capture_stdout=True, check=False, stderr=DEVNULL)
-        async with await trio.open_file("./setuidandsetgid.txt", "w") as f:        
-            send_channel, receive_channel = trio.open_memory_channel(math.inf)
-            async with trio.open_nursery() as nursery:
-                nursery.start_soon(walk, trio.Path("/"), send_channel)
-                while True:
-                     path = await receive_channel.receive()
-                     if path is None:
-                         break
-                     try:
-                        if (await path.stat()).st_mode & (stat.S_ISUID | stat.S_ISGID):
-                            await f.write(f"{path}\n")
-                     except FileNotFoundError:
-                        pass
+        files = [str(x.path) async for x in walk(trio.Path("/")) if x.mode & (stat.S_ISUID | stat.S_ISGID)]
+        async with await trio.open_file("./setuidandsetgid.txt", "w") as f:
+            await f.write("\n".join(files))
+
 
 async def main():
     async with trio.open_nursery() as nursery:
@@ -142,5 +140,5 @@ async def main():
         nursery.start_soon(lockdown_cron)
         nursery.start_soon(full_user_login)
 
-trio.run(main)
 
+trio.run(main)

@@ -8,3 +8,5 @@ python/files.dat
 mediafiles.txt
 sensitivefiles.txt
 venv/
+
+\.idea/
