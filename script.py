@@ -128,6 +128,21 @@ async def sensitive_file_perms():
         async with await trio.open_file("./setuidandsetgid.txt", "w") as f:
             await f.write("\n".join(files))
 
+def password_gen():
+    passwd = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(N))
+    return passwd.encode()
+
+async def lock_root_account():
+    logging.info("Changing root password...")
+    await trio.run_process(["chpasswd"], stdin=b"root:"+password_gen())
+    logging.info("Locking root account...")
+    await trio.run_process(["passwd", "-dl", "root"])
+
+async def password_based():
+    logging.info("Root account must be locked before cracklib is installed")
+    await lock_root_account()
+    logging.info("Installing cracklib")
+    await install_cracklib()
 
 async def main():
     async with trio.open_nursery() as nursery:
@@ -136,7 +151,7 @@ async def main():
         nursery.start_soon(sensitive_file_perms)
         nursery.start_soon(disable_removeable)
         nursery.start_soon(login_defs)
-        nursery.start_soon(install_cracklib)
+        nursery.start_soon(password_based)
         nursery.start_soon(lockdown_cron)
         nursery.start_soon(full_user_login)
 
