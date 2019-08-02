@@ -103,7 +103,7 @@ async def login_defs():
 
 
 async def remove_hacking_tools():
-    for package in ("john", "hydra", "aircrack-ng", "ophcrack"):
+    for package in ("john", "hydra", "aircrack-ng", "ophcrack", "netcat-traditional"):
         logging.info(f"Removing {package}")
         await trio.run_process(
             ["aptdcon", "--hide-terminal", "-p", package],
