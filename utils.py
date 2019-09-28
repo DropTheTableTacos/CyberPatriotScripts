@@ -42,13 +42,13 @@ async def walk(root):
     send_channel, receive_channel = trio.open_memory_channel(math.inf)
     async with trio.open_nursery() as nursery:
         nursery.start_soon(_walk, root, send_channel, nursery)
-        with receive_channel:
+        async with receive_channel:
             async for message in receive_channel:
                 yield message
 
 
 async def _walk(root, channel, nursery):
-    with channel:
+    async with channel:
         try:
             for subpath in await root.iterdir():
                 try:

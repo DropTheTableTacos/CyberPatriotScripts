@@ -8,6 +8,8 @@ import logging
 import stat
 from subprocess import CalledProcessError, DEVNULL
 import math
+import random
+import string
 
 LIGHTDMCONF = """
 [Seat:*]
@@ -129,7 +131,7 @@ async def sensitive_file_perms():
             await f.write("\n".join(files))
 
 def password_gen():
-    passwd = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(N))
+    passwd = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(16))
     return passwd.encode()
 
 async def lock_root_account():

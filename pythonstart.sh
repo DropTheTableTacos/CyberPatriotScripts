@@ -1,6 +1,6 @@
 sudo add-apt-repository -y ppa:deadsnakes/ppa
 sudo apt update
-sudo apt install aptdaemon python3.7
+sudo apt install -y aptdaemon python3.7 python3-pip python-pip
 sudo python3.7 -mpip install -U pip
 sudo python3.7 -mpip install --target /usr/lib/python3.7 ensurepip-vanilla
 python3.7 -mvenv venv
