@@ -1,6 +1,9 @@
+import os
 from dataclasses import dataclass
 from functools import wraps
 import inspect
+from typing import List, Tuple, AsyncIterator, T
+
 import trio
 import logging
 import collections
@@ -39,30 +42,40 @@ def apt(*packages):
 
 
 async def walk(root):
-    send_channel, receive_channel = trio.open_memory_channel(math.inf)
-    async with trio.open_nursery() as nursery:
-        nursery.start_soon(_walk, root, send_channel, nursery)
-        async with receive_channel:
-            async for message in receive_channel:
-                yield message
+    for root, dirs, files in os.walk('python/Lib/email'):
+        for fn in files:
+            path = trio.Path(root) / fn
+            mode = await path.stat().st_mode
+            yield File(path=path, mode=mode)
 
-
-async def _walk(root, channel, nursery):
-    async with channel:
-        try:
-            for subpath in await root.iterdir():
-                try:
-                    if await subpath.is_dir():
-                        nursery.start_soon(_walk, subpath, channel.clone(), nursery)
-                    elif await subpath.is_file():
-                        await channel.send(File(subpath, (await subpath.stat()).st_mode))
-                except OSError:
-                    pass
-        except OSError:
-            pass
 
 
 @dataclass()
 class File:
     path: trio.Path
     mode: int
+
+
+async def async_tee(itr, n: int):
+    sentinel = object()
+
+    queues: List[Tuple[trio.abc.Channel]] = [trio.open_memory_channel(0) for k in range(n)]
+
+    async def gen(k: int, q: Tuple[trio.abc.Channel]) -> AsyncIterator[T]:
+        if k == 0:
+            async for value in iter(itr):
+                async with trio.open_nursery() as nursery:
+                    for send_channel, _ in queues[1:]:
+                        nursery.start_soon(send_channel.send, value)
+                yield value
+
+            async with trio.open_nursery() as nursery:
+                for send_channel, _ in queues[1:]:
+                    nursery.start_soon(send_channel.send, sentinel)
+
+        else:
+            while True:
+                value = await q[1].recieve()
+                if value is sentinel:
+                    break
+                yield value

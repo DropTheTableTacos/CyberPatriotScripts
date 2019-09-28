@@ -2,7 +2,7 @@ import os
 
 import trio
 
-from utils import apt, ensure_apt, walk
+from utils import apt, ensure_apt, walk, async_tee
 
 import logging
 import stat
@@ -115,7 +115,7 @@ async def remove_hacking_tools():
     logging.info("Hacking tools removed")
 
 
-async def sensitive_file_perms():
+async def sensitive_file_perms(channel):
     logging.info("Chmodding /etc/passwd /etc/shadow /etc/group")
     async with trio.open_nursery() as nursery:
         nursery.start_soon(trio.run_process, ["chmod", "644", "/etc/passwd"])
@@ -126,7 +126,7 @@ async def sensitive_file_perms():
     async with FIND_LOCK:
         logging.info("Finding sensitive permissioned files")
         # p = await trio.run_process(["find", "/", "-perm", "-6000"], capture_stdout=True, check=False, stderr=DEVNULL)
-        files = [str(x.path) async for x in walk(trio.Path("/")) if x.mode & (stat.S_ISUID | stat.S_ISGID)]
+        files = [str(x.path) async for x in channel[1] if x.mode & (stat.S_ISUID | stat.S_ISGID)]
         async with await trio.open_file("./setuidandsetgid.txt", "w") as f:
             await f.write("\n".join(files))
 
@@ -146,11 +146,30 @@ async def password_based():
     logging.info("Installing cracklib")
     await install_cracklib()
 
+async def find_media_files(channel):
+    headers = (
+        b"RIFF",
+        b"\xff\xfb",
+        b"ID3",
+        b"OggS",
+        b"fLaC",
+    )
+    potential_media_files = []
+    async with await trio.open_file("./mediafiles.txt", "w") as f1:
+        for file in channel[1]:
+            async with await file.path.open('rb') as f:
+                firstbytes: bytes = await f.read(16)
+                for header in headers:
+                    if firstbytes.startswith(header):
+                        await f1.write("str(file.path)\n")
+
 async def main():
     async with trio.open_nursery() as nursery:
+        all_files_channels = await async_tee(walk("/"), 2)
         nursery.start_soon(disable_guest_account)
         nursery.start_soon(remove_hacking_tools)
-        nursery.start_soon(sensitive_file_perms)
+        nursery.start_soon(sensitive_file_perms, all_files_channels[0])
+        nursery.start_soon(find_media_files, all_files_channels[1])
         nursery.start_soon(disable_removeable)
         nursery.start_soon(login_defs)
         nursery.start_soon(password_based)
