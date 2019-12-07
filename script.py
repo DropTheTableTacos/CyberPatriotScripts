@@ -17,6 +17,7 @@ allow-guest=false
 """.strip()
 
 FIND_LOCK = trio.Lock()
+INPUT_LOCK = trio.Lock()
 
 logging.basicConfig(
     level=logging.DEBUG, format="%(asctime)s [%(levelname)s] (%(funcName)s) %(message)s"
@@ -147,22 +148,47 @@ async def password_based():
     await install_cracklib()
 
 async def find_media_files(channel):
+    sensitivepatterns = None
     headers = (
         b"RIFF",
         b"\xff\xfb",
         b"ID3",
         b"OggS",
         b"fLaC",
+
     )
+    badsuffixes = (
+        "mp3",
+        "mp4",
+        "avi",
+        "xlsx",
+        "docx",
+        "exe",
+        "zip"
+    )
+    async with INPUT_LOCK:
+        sensitivepatterns = (
+            (await ainput("Enter an admin password: ")).encode('utf-8'),
+        )
     potential_media_files = []
     async with await trio.open_file("./mediafiles.txt", "w") as f1:
         for file in channel[1]:
-            async with await file.path.open('rb') as f:
-                firstbytes: bytes = await f.read(16)
-                for header in headers:
-                    if firstbytes.startswith(header):
-                        await f1.write("str(file.path)\n")
+            if file.path.suffix in badsuffixes:
+                await f1.write(f"{str(file.path)}\n")
+            else:
+                async with await file.path.open('rb') as f:
+                    data: bytes = await f.read()
+                    for header in headers:
+                        if data.startswith(header):
+                            await f1.write(f"{str(file.path)}\n")
+                    for sens in sensitivepatterns:
+                        if sens in data:
+                            await f1.write(f"{str(file.path)}\n")
 
+
+async def ainput(*args):
+    return await trio.to_thread.run_sync(input, *args)
+    
 async def main():
     async with trio.open_nursery() as nursery:
         all_files_channels = await async_tee(walk("/"), 2)
