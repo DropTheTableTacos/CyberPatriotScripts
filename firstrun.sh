@@ -12,7 +12,7 @@ sudo aptitude -y update
 sudo aptitude -y upgrade
 
 echo Install script stuff
-sudo aptitude -y install git python3-dev python3-pip apt-transport-https openssh-server augeas-tools gawk libuser
+sudo aptitude -y install git python3-dev python3-pip apt-transport-https openssh-server augeas-tools gawk libuser members
 
 echo Nice shell setup because I\'m picky
 git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it

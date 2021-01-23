@@ -3,7 +3,7 @@ echo Enter password
 sudo echo I haz password
 while true; do
   echo "=====ADMINS====="
-  sudo libuser-lid -g sudo
+  sudo members sudo | tr "\n" " "
   echo "================"
   echo "Would you like to:"
   echo "1. Admin a user"
